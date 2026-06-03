@@ -39,3 +39,37 @@ jobs:
       - name: Trigger Render deploy
         run: |
           curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+
+  update-changelog:
+    name: Update changes.md
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: write
+    if: github.event_name == 'push'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Update changes.md
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+          COMMIT_HASH=$(git log -1 --pretty=format:"%h")
+          DATE=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          
+          if [[ "$COMMIT_MSG" == *"Update changes.md [skip ci]"* ]]; then
+            echo "Skipping changelog update for automated commit."
+            exit 0
+          fi
+          
+          echo "- **$DATE** ($COMMIT_HASH): $COMMIT_MSG" >> changes.md
+          
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          git add changes.md
+          git commit -m "Update changes.md [skip ci]"
+          git push origin HEAD:${{ github.ref_name }}
