@@ -6,7 +6,7 @@
 
 <section class="hero">
   <div class="container container-narrow">
-    <p class="hero-kicker">Masak Bareng Gue</p>
+    <p class="hero-kicker">Masak Bareng Daniel Gay</p>
     <h1 class="hero-title">
       Masak apa<br>hari ini, Chef?
     </h1>
@@ -16,13 +16,7 @@
     </p>
 
     <form class="hero-search" action="/search" method="get">
-      <input
-        type="search"
-        name="q"
-        placeholder="Rendang, ayam, tahu..."
-        autocomplete="off"
-        autofocus
-      >
+      <input type="search" name="q" placeholder="Rendang, ayam, tahu..." autocomplete="off" autofocus>
       <button type="submit">Cari Resep</button>
     </form>
 
@@ -44,7 +38,7 @@
     </div>
     <div class="recipe-list">
       {% for recipe in featured %}
-        {{ recipe_item(recipe, loop.index) }}
+      {{ recipe_item(recipe, loop.index) }}
       {% endfor %}
     </div>
   </div>
